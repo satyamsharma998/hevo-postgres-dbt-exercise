@@ -110,6 +110,9 @@ export DBT_SOURCE_SCHEMA=...     # schema Hevo loaded into
 dbt build        # runs the models and all tests
 ```
 
+If a value contains shell-special characters (`$`, `#`, spaces, backslashes), wrap it
+in single quotes when you `export` it, or the shell will mangle it.
+
 ## The `customers` model
 
 | Column | Logic |
