@@ -49,7 +49,7 @@ The container starts with `wal_level=logical`, `max_replication_slots=10`,
 `max_wal_senders=10`, `wal_sender_timeout=0` (Hevo's requirements). On first
 start, `docker/init/` creates the three tables (with primary keys), a
 replication user for Hevo, read grants, a `hevo_publication` publication for the
-three tables, and a `pg_hba.conf` replication rule.
+three tables, a `hevo_slot` logical replication slot, and a `pg_hba.conf` replication rule.
 
 ## 2. Load the CSV files
 
@@ -66,7 +66,8 @@ Expected row counts: `raw_customers` 100, `raw_orders` 99, `raw_payments` 113.
    or use an SSH tunnel / ngrok TCP tunnel to the PostgreSQL port).
 3. **Pipelines → Create Pipeline → PostgreSQL → Snowflake**, then:
    - **Pipeline Mode: Logical Replication**
-   - Host/port/database from your env file, user = the Hevo replication user
+   - Host/port/database from your env file, user = the Hevo replication user,
+     publication key `hevo_publication`, replication slot `hevo_slot`
    - Enable *Load Historical Data*; select `raw_customers`, `raw_orders`, `raw_payments`
 4. Note the **Pipeline ID** and your **Team ID** for the submission email.
 

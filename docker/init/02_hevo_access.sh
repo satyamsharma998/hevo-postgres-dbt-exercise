@@ -15,6 +15,9 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO :"hevo_user"
 -- Hevo reads changes through a publication (pgoutput plugin).
 CREATE PUBLICATION hevo_publication
     FOR TABLE public.raw_customers, public.raw_orders, public.raw_payments;
+
+-- Hevo (Edge pipelines) asks for an existing replication slot name.
+SELECT pg_create_logical_replication_slot('hevo_slot', 'pgoutput');
 EOSQL
 
 # Allow replication connections from outside the container (Hevo / tunnel).
