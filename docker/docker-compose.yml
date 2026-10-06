@@ -1,0 +1,33 @@
+# PostgreSQL source for the Hevo exercise, configured for logical replication.
+# All connection values come from an env file kept OUTSIDE this repo, e.g.
+#   docker compose --env-file ~/.config/hevo-exercise/postgres.env -f docker/docker-compose.yml up -d
+services:
+  postgres:
+    image: postgres:16
+    container_name: hevo-exercise-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB}
+      HEVO_DB_USER: ${HEVO_DB_USER:?set HEVO_DB_USER}
+      HEVO_DB_PASSWORD: ${HEVO_DB_PASSWORD:?set HEVO_DB_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    # Settings Hevo requires for Logical Replication (WAL level "logical").
+    command:
+      - postgres
+      - -c
+      - wal_level=logical
+      - -c
+      - max_replication_slots=10
+      - -c
+      - max_wal_senders=10
+      - -c
+      - wal_sender_timeout=0
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+
+volumes:
+  pgdata:

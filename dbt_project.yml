@@ -1,0 +1,18 @@
+name: hevo_exercise
+version: "1.0.0"
+config-version: 2
+
+# Connection details live in a profiles.yml OUTSIDE this repo (see README).
+profile: hevo_exercise
+
+model-paths: ["models"]
+test-paths: ["tests"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  hevo_exercise:
+    staging:
+      +materialized: view
+    customers:
+      +materialized: table
